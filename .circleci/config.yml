@@ -70,19 +70,6 @@ workflows:
                 - '2.2.10'
                 - '2.3.8'
                 - '2.4.10'
-      - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>-lint<<matrix.lint_version>>
-          pdk: false
-          matrix:
-            parameters:
-              semantic_version:
-                - '1.0.4'
-              lint_version:
-                - '3.3.0'
-              puppet_version:
-                - '<5.0.0'
-                - '<6.0.0'
-              ruby_version:
                 - '2.5.9'
                 - '2.6.10'
       - test:
@@ -93,7 +80,7 @@ workflows:
               semantic_version:
                 - '1.0.4'
               lint_version:
-                - '3.3.0'
+                - '2.5.2'
               puppet_version:
                 - '<7.0.0'
                 - '<8.0.0'
