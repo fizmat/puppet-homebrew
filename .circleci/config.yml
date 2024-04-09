@@ -18,9 +18,11 @@ jobs:
         type: string
       lint_version:
         type: string
+      semantic_version:
+        type: string
     steps:
       - checkout
-      - run: gem install -N "puppet-lint:<< parameters.lint_version >>" "puppet:<< parameters.puppet_version >>"
+      - run: gem install -N "semantic_puppet:<< parameters.semantic_version >>" "puppet-lint:<< parameters.lint_version >>" "puppet:<< parameters.puppet_version >>"
       - when:
           condition: << parameters.pdk >>
           steps:
@@ -57,6 +59,8 @@ workflows:
           pdk: false
           matrix:
             parameters:
+              semantic_version:
+                - '1.0.4'
               lint_version:
                 - '2.5.2'
               puppet_version:
@@ -71,6 +75,8 @@ workflows:
           pdk: false
           matrix:
             parameters:
+              semantic_version:
+                - '1.0.4'
               lint_version:
                 - '3.3.0'
               puppet_version:
@@ -84,6 +90,8 @@ workflows:
           pdk: true
           matrix:
             parameters:
+              semantic_version:
+                - '1.0.4'
               lint_version:
                 - '3.3.0'
               puppet_version:
@@ -97,6 +105,8 @@ workflows:
           pdk: true
           matrix:
             parameters:
+              semantic_version:
+                - '~>1.0'
               lint_version:
                 - '4.2.4'
               puppet_version:
@@ -109,6 +119,8 @@ workflows:
           pdk: true
           matrix:
             parameters:
+              semantic_version:
+                - '~>1.0'
               lint_version:
                 - '4.2.4'
               puppet_version:
