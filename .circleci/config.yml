@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  linter: thekevjames/linter@0
+  linter: talkiq/linter@4.0.0
 
 jobs:
   test:
@@ -46,7 +46,6 @@ workflows:
   run-jobs:
     jobs:
       - linter/pre-commit:
-          python_version: 3.7.10
           pre-steps:
             - run: apt-get update
             - run: apt-get install -qy shellcheck
