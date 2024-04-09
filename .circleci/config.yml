@@ -16,13 +16,11 @@ jobs:
         type: string
       ruby_version:
         type: string
-      lint_version:
-        type: string
-      semantic_version:
+      other_gems:
         type: string
     steps:
       - checkout
-      - run: gem install -N "semantic_puppet:<< parameters.semantic_version >>" "puppet-lint:<< parameters.lint_version >>" "puppet:<< parameters.puppet_version >>"
+      - run: gem install -N << parameters.other_gems >> "puppet:<< parameters.puppet_version >>"
       - when:
           condition: << parameters.pdk >>
           steps:
@@ -55,14 +53,11 @@ workflows:
             - run: apt-get install -qy shellcheck
 
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>-lint<<matrix.lint_version>>
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           pdk: false
           matrix:
             parameters:
-              semantic_version:
-                - '1.0.4'
-              lint_version:
-                - '2.5.2'
+              other_gems: ['"semantic_puppet:1.0.4" "puppet-lint:<3"']
               puppet_version:
                 - '<5.0.0'
                 - '<6.0.0'
@@ -73,14 +68,11 @@ workflows:
                 - '2.5.9'
                 - '2.6.10'
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>-lint<<matrix.lint_version>>
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           pdk: true
           matrix:
             parameters:
-              semantic_version:
-                - '1.0.4'
-              lint_version:
-                - '2.5.2'
+              other_gems: ['"semantic_puppet:1.0.4" "puppet-lint:<3"']
               puppet_version:
                 - '<7.0.0'
                 - '<8.0.0'
@@ -88,28 +80,22 @@ workflows:
                 - '2.5.9'
                 - '2.6.10'
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>-lint<<matrix.lint_version>>
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           pdk: true
           matrix:
             parameters:
-              semantic_version:
-                - '~>1.0'
-              lint_version:
-                - '4.2.4'
+              other_gems: ['"puppet-lint"']
               puppet_version:
                 - '<7.0.0'
                 - '<8.0.0'
               ruby_version:
                 - '2.7.8'
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>-lint<<matrix.lint_version>>
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           pdk: true
           matrix:
             parameters:
-              semantic_version:
-                - '~>1.0'
-              lint_version:
-                - '4.2.4'
+              other_gems: ['"puppet-lint"']
               puppet_version:
                 - '<8.0.0'
                 - '<9.0.0'
