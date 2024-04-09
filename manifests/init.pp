@@ -7,7 +7,7 @@ class homebrew (
   $multiuser                  = false,
 ) {
 
-  if $::operatingsystem != 'Darwin' {
+  if $::os::name != 'Darwin' {
     fail('This Module works on Mac OSX only!')
   }
 
