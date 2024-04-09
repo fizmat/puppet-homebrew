@@ -16,9 +16,11 @@ jobs:
         type: string
       ruby_version:
         type: string
+      lint_version:
+        type: string
     steps:
       - checkout
-      - run: gem install -N puppet-lint "puppet:<< parameters.puppet_version >>"
+      - run: gem install -N "puppet-lint:<< parameters.lint_version >>" "puppet:<< parameters.puppet_version >>"
       - when:
           condition: << parameters.pdk >>
           steps:
@@ -51,10 +53,12 @@ workflows:
             - run: apt-get install -qy shellcheck
 
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>-lint<<matrix.lint_version>>
           pdk: false
           matrix:
             parameters:
+              lint_version:
+                - '2.5.2'
               puppet_version:
                 - '<5.0.0'
                 - '<6.0.0'
@@ -62,23 +66,55 @@ workflows:
                 - '2.2.10'
                 - '2.3.8'
                 - '2.4.10'
-                - '2.5.9'
-                - '2.6.7'
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>-lint<<matrix.lint_version>>
+          pdk: false
+          matrix:
+            parameters:
+              lint_version:
+                - '3.4.0'
+              puppet_version:
+                - '<5.0.0'
+                - '<6.0.0'
+              ruby_version:
+                - '2.5.9'
+                - '2.6.10'
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>-lint<<matrix.lint_version>>
           pdk: true
           matrix:
             parameters:
+              lint_version:
+                - '3.4.0'
               puppet_version:
                 - '<7.0.0'
                 - '<8.0.0'
-                - '<9.0.0'
               ruby_version:
                 - '2.5.9'
-                - '2.6.7'
-                - '2.7.3'
                 - '2.6.10'
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>-lint<<matrix.lint_version>>
+          pdk: true
+          matrix:
+            parameters:
+              lint_version:
+                - '4.2.4'
+              puppet_version:
+                - '<7.0.0'
+                - '<8.0.0'
+              ruby_version:
                 - '2.7.8'
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>-lint<<matrix.lint_version>>
+          pdk: true
+          matrix:
+            parameters:
+              lint_version:
+                - '4.2.4'
+              puppet_version:
+                - '<8.0.0'
+                - '<9.0.0'
+              ruby_version:
                 - '3.0.6'
                 - '3.1.4'
                 - '3.2.3'
