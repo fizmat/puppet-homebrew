@@ -1,5 +1,5 @@
 class { 'homebrew':
-  user         => 'travis',
+  user         => 'distiller',
   group        => 'admin',
   github_token => 'test-token-not-valid',
 }
