@@ -1,4 +1,4 @@
 class { 'homebrew':
-  user  => 'travis',
+  user  => 'distiller',
   group => 'admin',
 }
