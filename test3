@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+FAILURES=0
+
+apply() {
+    sudo puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 2 ]
+    FAILURES=$((FAILURES + $?))
+}
+check() {
+    "$@"
+    FAILURES=$((FAILURES + $?))
+}
+
+echo 'Apply install_options.pp...'
+apply tests/install_options.pp
+check which ack
+
+echo 'Apply packages.pp...'
+apply tests/packages.pp
+check stat /Applications/clementine.app/Contents/MacOS/clementine
+check which git
+check stat "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+check which bzr
+
+echo 'Apply tap.pp...'
+apply tests/tap.pp
+check which gc2qif
+
+echo 'Apply tap_priority.pp...'
+apply tests/tap_priority.pp
+check brew list ncl
+
+if [ "$FAILURES" -ne "0" ]; then
+    exit 1
+fi
