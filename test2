@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+FAILURES=0
+
+apply() {
+    puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 2 ]
+    FAILURES=$((FAILURES + $?))
+}
+check() {
+    "$@"
+    FAILURES=$((FAILURES + $?))
+}
+
+echo 'Test apply token.pp...'
+apply tests/token.pp
+check cat /etc/environment | grep HOMEBREW_GITHUB_API_TOKEN
+
+if [ "$FAILURES" -ne "0" ]; then
+    exit 1
+fi

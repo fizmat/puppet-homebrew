@@ -21,6 +21,8 @@ jobs:
         type: string
       other_gems:
         type: string
+      test_script:
+        type: string
     steps:
       - checkout
       - macos/switch-ruby:
@@ -45,7 +47,7 @@ jobs:
           steps:
             - run: puppet module build
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
-      - run: ./test
+      - run: ./<< parameters.test_script >>
       - store_artifacts:
           path: pkg/
 
@@ -107,7 +109,7 @@ workflows:
       #         pdk_version:
       #           - '>0'
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          name: ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>-<<matrix.test_script>>
           matrix:
             parameters:
               other_gems: ['"puppet-lint"']
@@ -121,3 +123,7 @@ workflows:
                 - '3.2'
               pdk_version:
                 - '>0'
+              test_script:
+                - test1
+                - test2
+                - test3
