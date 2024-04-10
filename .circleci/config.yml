@@ -72,7 +72,7 @@ workflows:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
-              other_gems: ['"thor:1.2.2" "semantic_puppet:1.0.4" "puppet-lint:<3" "facter:<4.6" "public_suffix:<5"']
+              other_gems: ['"bundler:<2.4" "thor:1.2.2" "semantic_puppet:1.0.4" "puppet-lint:<3" "facter:<4.6" "public_suffix:<5"']
               puppet_version:
                 - '<7.0.0'
                 - '<8.0.0'
