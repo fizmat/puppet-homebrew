@@ -25,6 +25,8 @@ jobs:
         type: string
       other_gems:
         type: string
+      test_script:
+        type: string
     steps:
       - checkout
       - macos/switch-ruby:
@@ -43,7 +45,7 @@ jobs:
       - run: puppet parser validate --noop manifests/compiler.pp
       - run: pdk build
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
-      # - run: ./test
+      - run: ./<< parameters.test_script >>
       - store_artifacts:
           path: pkg/
 
@@ -55,7 +57,7 @@ workflows:
             - run: apt-get update
             - run: apt-get install -qy shellcheck
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          name: <<matrix.test_script>>-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
               xcode_version:
@@ -71,8 +73,13 @@ workflows:
                 - '~>2'
               lint_version:
                 - '~>2'
+              test_script:
+                - test1
+                - test2
+                - test3
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          name: <<matrix.test_script>>-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+
           matrix:
             parameters:
               xcode_version:
@@ -88,8 +95,12 @@ workflows:
                 - '~>2'
               lint_version:
                 - '~>2'
+              test_script:
+                - test1
+                - test2
+                - test3  
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          name: <<matrix.test_script>>-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
               xcode_version:
@@ -105,8 +116,12 @@ workflows:
                 - '~>2'
               lint_version:
                 - '~>2'
+              test_script:
+                - test1
+                - test2
+                - test3
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          name: <<matrix.test_script>>-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
               xcode_version:
@@ -122,8 +137,12 @@ workflows:
                 - '~>2'
               lint_version:
                 - '~>2'
+              test_script:
+                - test1
+                - test2
+                - test3
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          name: <<matrix.test_script>>-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
               xcode_version:
@@ -140,8 +159,12 @@ workflows:
                 - '~>3'
               lint_version:
                 - '~>4'
+              test_script:
+                - test1
+                - test2
+                - test3
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          name: <<matrix.test_script>>-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
               xcode_version:
@@ -158,7 +181,7 @@ workflows:
               lint_version:
                 - '~>4'
       - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          name: <<matrix.test_script>>-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
               xcode_version:
@@ -177,3 +200,7 @@ workflows:
                 - '~>3'
               lint_version:
                 - '~>4'
+              test_script:
+                - test1
+                - test2
+                - test3
