@@ -10,11 +10,11 @@ jobs:
     environment:
       STRICT_VARIABLES: "yes"
     parameters:
-      pdk:
-        type: boolean
       puppet_version:
         type: string
       ruby_version:
+        type: string
+      pdk_version:
         type: string
       other_gems:
         type: string
@@ -22,9 +22,9 @@ jobs:
       - checkout
       - run: gem install -N << parameters.other_gems >> "puppet:<< parameters.puppet_version >>"
       - when:
-          condition: << parameters.pdk >>
+          condition: << parameters.pdk_version >>
           steps:
-            - run: gem install -N pdk
+            - run: gem install -N "pdk:<< parameters.pdk_version >>"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
@@ -32,11 +32,11 @@ jobs:
       - run: puppet parser validate --noop manifests/install.pp
       - run: puppet parser validate --noop manifests/compiler.pp
       - when:
-          condition: << parameters.pdk >>
+          condition: << parameters.pdk_version >>
           steps:
             - run: pdk build
       - unless:
-          condition: << parameters.pdk >>
+          condition: << parameters.pdk_version >>
           steps:
             - run: puppet module build
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
@@ -54,7 +54,6 @@ workflows:
 
       - test:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: false
           matrix:
             parameters:
               other_gems: ['"semantic_puppet:1.0.4" "puppet-lint:<3"']
@@ -67,9 +66,10 @@ workflows:
                 - '2.4.10'
                 - '2.5.9'
                 - '2.6.10'
+              pdk_version:
+                - ''
       - test:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: true
           matrix:
             parameters:
               other_gems: ['"thor:1.2.2" "semantic_puppet:1.0.4" "puppet-lint:<3" "facter:<4.6"']
@@ -78,9 +78,10 @@ workflows:
                 - '<8.0.0'
               ruby_version:
                 - '2.5.9'
+              pdk_version:
+                - '<3'
       - test:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: true
           matrix:
             parameters:
               other_gems: ['"bundler:2.4.22" "semantic_puppet:1.0.4" "puppet-lint:<3"']
@@ -89,9 +90,10 @@ workflows:
                 - '<8.0.0'
               ruby_version:
                 - '2.6.10'
+              pdk_version:
+                - '<3'
       - test:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: true
           matrix:
             parameters:
               other_gems: ['"puppet-lint"']
@@ -100,9 +102,10 @@ workflows:
                 - '<8.0.0'
               ruby_version:
                 - '2.7.8'
+              pdk_version:
+                - '>0'
       - test:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: true
           matrix:
             parameters:
               other_gems: ['"puppet-lint"']
@@ -114,3 +117,5 @@ workflows:
                 - '3.1.4'
                 - '3.2.3'
                 - '3.3.0'
+              pdk_version:
+                - '>0'
