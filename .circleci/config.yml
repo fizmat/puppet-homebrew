@@ -72,12 +72,22 @@ workflows:
           pdk: true
           matrix:
             parameters:
-              other_gems: ['"semantic_puppet:1.0.4" "puppet-lint:<3"']
+              other_gems: ['"thor:1.2.2" "semantic_puppet:1.0.4" "puppet-lint:<3"']
               puppet_version:
                 - '<7.0.0'
                 - '<8.0.0'
               ruby_version:
                 - '2.5.9'
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          pdk: true
+          matrix:
+            parameters:
+              other_gems: ['"bundler:2.4.22" "semantic_puppet:1.0.4" "puppet-lint:<3"']
+              puppet_version:
+                - '<7.0.0'
+                - '<8.0.0'
+              ruby_version:
                 - '2.6.10'
       - test:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
