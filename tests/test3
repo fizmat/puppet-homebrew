@@ -15,6 +15,6 @@ apply tests/tap.pp
 check which gc2qif
 
 apply tests/tap_priority.pp
-check brew list ncl
+check which f2c
 
 exit $FAILURES
