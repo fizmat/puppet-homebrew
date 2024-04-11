@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 FAILURES=0
 
+apply_error() {
+    # expecting an error and a change, so code 6
+    sudo puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 6 ] || echo 'Error' $((++FAILURES))
+}
 apply() {
     sudo puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 2 ] || echo 'Error' $((++FAILURES))
 }
@@ -11,51 +15,59 @@ uncheck() {
     ! "$@" || echo 'Error' $((++FAILURES))
 }
 
-brew list
-brew install ack
-
+# test default install (used to be formula-only)
 uncheck which ack
+check which nano # nano is installed on CI by default
 uncheck which rar
-uncheck which nano
+uncheck stat /Applications/Nano.app
 echo 'Apply install_brew.pp...'
 apply tests/install_brew.pp
-check which ack
-check which rar
-check which nano
+check which ack  # installed from formula
+check which rar  # installed from cask (not expected by provider but not a problem)
+check which nano # installed from formula over cask
+check brew list nano
+uncheck stat /Applications/Nano.app # not installed, shadowed by formula
+
 echo 'Apply uninstall.pp...'
 apply tests/uninstall.pp
 uncheck which ack
 uncheck which rar
-uncheck which nano
-
-uncheck which ack
-uncheck which rar
-uncheck which nano
+check which nano # nano is installed on CI by default
+uncheck brew list nano
 uncheck stat /Applications/Nano.app
+
+# test universal install (provider will try formula and cask)
 echo 'Apply install_homebrew.pp...'
 apply tests/install_homebrew.pp
-check which ack
-check which rar
-check which nano
-uncheck stat /Applications/Nano.app
+check which ack  # installed from formula
+check which rar  # installed from cask (not expected by provider but not a problem)
+check which nano  # installed from formula over cask
+check brew list nano
+uncheck stat /Applications/Nano.app  # not installed, shadowed by formula
+
 echo 'Apply uninstall.pp...'
 apply tests/uninstall.pp
 uncheck which ack
 uncheck which rar
-uncheck which nano
+check which nano # nano is installed on CI by default
+uncheck brew list nano
 uncheck stat /Applications/Nano.app
 
+# test cask-only install
 echo 'Apply install_brewcask.pp...'
 apply tests/install_brewcask.pp
-check which ack
-check which rar
-uncheck which nano
-check stat /Applications/Nano.app
+uncheck which ack  # not installed: only formula available
+check which rar  # installed from cask explicitly
+check which nano # nano is installed on CI by default
+uncheck brew list nano # not installed from formula
+check stat /Applications/Nano.app # installed from cask
+
 echo 'Apply uninstall.pp...'
 apply tests/uninstall.pp
 uncheck which ack
 uncheck which rar
-uncheck which nano
+check which nano # nano is installed on CI by default
+uncheck brew list nano
 uncheck stat /Applications/Nano.app
 
 exit $FAILURES
