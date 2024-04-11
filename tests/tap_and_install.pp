@@ -1,11 +1,11 @@
 Package <| provider == tap |> -> Package <| provider == homebrew |>
 
-package { 'davidchall/hep':
+package { 'denji/nginx':
   ensure   => present,
   provider => tap,
 }
 
-package { 'f2c':
+package { 'nginx-full':
   ensure   => present,
-  provider => homebrew,
+  provider => brew,
 }

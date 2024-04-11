@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+FAILURES=0
+
+apply() {
+    sudo puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 2 ] || echo 'Error' $((++FAILURES))
+}
+check() {
+    "$@" || echo 'Error' $((++FAILURES))
+}
+uncheck() {
+    ! "$@" || echo 'Error' $((++FAILURES))
+}
+
+uncheck cat /etc/environment | grep HOMEBREW_GITHUB_API_TOKEN
+echo 'Test apply token.pp...'
+apply tests/token.pp
+check which brew
+check cat /etc/environment | grep HOMEBREW_GITHUB_API_TOKEN
+
+exit $FAILURES
