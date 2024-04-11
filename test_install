@@ -54,11 +54,11 @@ uncheck brew list nano
 uncheck stat /Applications/Nano.app
 
 # test cask-only install
-apply tests/install_brewcask.pp
+apply_error tests/install_brewcask.pp
 uncheck which ack  # not installed: only formula available
 check which rar  # installed from cask explicitly
 check which nano # nano is installed on CI by default
-uncheck brew list nano # not installed from formula
+check brew list nano # it's actually the other nano!
 check stat /Applications/Nano.app # installed from cask
 
 apply tests/uninstall.pp
