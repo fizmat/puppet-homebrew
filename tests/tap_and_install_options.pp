@@ -1,16 +1,14 @@
 Package <| provider == tap |> -> Package <| provider == homebrew |>
 
-# TODO?: create a small tap specifically for testing
-
-package { 'homebrew-ffmpeg/ffmpeg':
+package { 'denji/nginx':
   ensure   => present,
   provider => tap,
 }
 
-package { 'homebrew-ffmpeg/ffmpeg/ffmpeg':
+package { 'nginx-full':
   ensure          => present,
   provider        => brew,
   install_options => [
-    '--with-srt',
+    '--with-redis2-module',
   ],
 }

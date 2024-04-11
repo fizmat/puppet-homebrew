@@ -1,11 +1,11 @@
 Package <| provider == tap |> -> Package <| provider == homebrew |>
 
-package { 'homebrew-ffmpeg/ffmpeg':
+package { 'denji/nginx':
   ensure   => present,
   provider => tap,
 }
 
-package { 'homebrew-ffmpeg/ffmpeg/ffmpeg':
+package { 'nginx-full':
   ensure   => present,
   provider => brew,
 }
