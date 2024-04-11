@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 FAILURES=0
 
+apply_error() {
+    # expecting an error and a change, so code 6
+    sudo puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 6 ] || echo 'Error' $((++FAILURES))
+}
 apply() {
     sudo puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 2 ] || echo 'Error' $((++FAILURES))
 }
@@ -14,7 +18,7 @@ uncheck() {
 uncheck brew tap | grep denji/nginx
 uncheck which nginx
 echo 'Apply tap_and_install.pp...'
-apply tests/tap_and_install.pp
+apply_error tests/tap_and_install.pp
 check brew tap | grep denji/nginx
 check which nginx
 uncheck nginx -V 2>&1 | tr ' ' '\n' | grep redis2
@@ -24,7 +28,7 @@ uncheck brew tap | grep denji/nginx
 uncheck which nginx
 
 echo 'Apply tap_and_install_options.pp...'
-apply tests/tap_and_install_options.pp
+apply_error tests/tap_and_install_options.pp
 check brew tap | grep denji/nginx
 check which nginx
 check nginx -V 2>&1 | tr ' ' '\n' | grep redis2
