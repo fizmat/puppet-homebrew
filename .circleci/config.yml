@@ -7,36 +7,35 @@ jobs:
   test:
     docker:
       - image: ruby:<< parameters.ruby_version >>
+    resource_class: small
     environment:
       STRICT_VARIABLES: "yes"
     parameters:
-      pdk:
-        type: boolean
       puppet_version:
         type: string
       ruby_version:
         type: string
+      pdk_version:
+        type: string
+      lint_version:
+        type: string
+      other_gems:
+        type: string
     steps:
       - checkout
-      - run: gem install -N puppet-lint "puppet:<< parameters.puppet_version >>"
-      - when:
-          condition: << parameters.pdk >>
-          steps:
-            - run: gem install -N pdk
+      - run: >-
+          gem install -N
+          << parameters.other_gems >>
+          "puppet:<< parameters.puppet_version >>"
+          "pdk:<< parameters.pdk_version >>"
+          "puppet-lint:<< parameters.lint_version >>"
       - run: puppet-lint manifests/init.pp
       - run: puppet-lint manifests/install.pp
       - run: puppet-lint manifests/compiler.pp
       - run: puppet parser validate --noop manifests/init.pp
       - run: puppet parser validate --noop manifests/install.pp
       - run: puppet parser validate --noop manifests/compiler.pp
-      - when:
-          condition: << parameters.pdk >>
-          steps:
-            - run: pdk build
-      - unless:
-          condition: << parameters.pdk >>
-          steps:
-            - run: puppet module build
+      - run: pdk build
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
       # - run: ./test
       - store_artifacts:
@@ -49,29 +48,159 @@ workflows:
           pre-steps:
             - run: apt-get update
             - run: apt-get install -qy shellcheck
-
       - test:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: false
           matrix:
             parameters:
+              other_gems:
+                -  '"public_suffix:~>3" "ffi:~>1.12.0" "cri:~>2.10.0"'
               puppet_version:
-                - '<5.0.0'
-                - '<6.0.0'
+                - '~>4'
+                - '~>5'
+                # - '~>6' explicitly not compatible with ruby<2.3
               ruby_version:
                 - '2.2.10'
-                - '2.3.8'
-                - '2.4.10'
-                - '2.5.9'
-                - '2.6.7'
+              pdk_version:
+                - '~>1'
+              lint_version:
+                - '~>2'
       - test:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: true
           matrix:
             parameters:
+              other_gems:
+                - '"public_suffix:~>4" "ffi:~>1.15.0" "cri:<2.15.11"'
               puppet_version:
-                - '<7.0.0'
+                - '~>4'
+                - '~>5'
+              ruby_version:
+                - '2.3.8'
+                - '2.4.10'
+              pdk_version:
+                - '~>1'
+              lint_version:
+                - '~>2'
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          matrix:
+            parameters:
+              other_gems:
+                - '"public_suffix:~>4" "ffi:~>1.15.0" "cri:<2.15.11" "semantic_puppet:~>1.0.0" "thor:~>1.2.0" "facter:~>4.2.0"'
+              puppet_version:
+                - '~>6'
+              ruby_version:
+                - '2.3.8'
+                - '2.4.10'
+              pdk_version:
+                - '~>1'
+              lint_version:
+                - '~>2'
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          matrix:
+            parameters:
+              other_gems:
+                - '"bundler:~>2.3.0" "public_suffix:~>4"'
+              puppet_version:
+                - '~>4'
+                - '~>5'
               ruby_version:
                 - '2.5.9'
-                - '2.6.7'
-                - '2.7.3'
+              pdk_version:
+                - '~>2'
+              lint_version:
+                - '~>2'
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          matrix:
+            parameters:
+              other_gems:
+                - '"bundler:~>2.3.0" "public_suffix:~>4" "semantic_puppet:~>1.0.0"'
+              puppet_version:
+                - '~>6'
+                - '~>7'
+              ruby_version:
+                - '2.5.9'
+              pdk_version:
+                - '~>2'
+              lint_version:
+                - '~>2'
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          matrix:
+            parameters:
+              other_gems:
+                - '"bundler:~>2.4.0"'
+              puppet_version:
+                - '~>4'
+                - '~>5'
+              ruby_version:
+                - '2.6.10'
+              pdk_version:
+                - '~>2'
+              lint_version:
+                - '~>2'
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          matrix:
+            parameters:
+              other_gems:
+                - '"bundler:~>2.4.0" "semantic_puppet:~>1.0.0"'
+              puppet_version:
+                - '~>6'
+                - '~>7'
+              ruby_version:
+                - '2.6.10'
+              pdk_version:
+                - '~>2'
+              lint_version:
+                - '~>2'
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          matrix:
+            parameters:
+              other_gems:
+                - ''
+              puppet_version:
+                # -'~5' sync library dropped in ruby 2.7
+                - '~>6'
+                - '~>7'
+              ruby_version:
+                - '2.7.8'
+              pdk_version:
+                - '~>3'
+              lint_version:
+                - '~>4'
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          matrix:
+            parameters:
+              other_gems:
+                - ''
+              puppet_version:
+                # - '~>6' URI.escape() droppd in 3.0,
+                - '~>7'
+              ruby_version:
+                - '3.0.6'
+              pdk_version:
+                - '~>3'
+              lint_version:
+                - '~>4'
+      - test:
+          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          matrix:
+            parameters:
+              other_gems:
+                - ''
+              puppet_version:
+                # - '~>6' URI.escape() droppd in 3.0, .untaint() dropped in 3.2
+                - '~>7'
+                - '~>8'
+              ruby_version:
+                - '3.1.4'
+                - '3.2.3'
+                - '3.3.0'
+              pdk_version:
+                - '~>3'
+              lint_version:
+                - '~>4'
