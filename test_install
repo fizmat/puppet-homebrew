@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+FAILURES=0
+
+apply() {
+    sudo puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 2 ] || echo 'Error' $((++FAILURES))
+}
+check() {
+    "$@" || echo 'Error' $((++FAILURES))
+}
+uncheck() {
+    ! "$@" || echo 'Error' $((++FAILURES))
+}
+
+brew list
+brew install ack
+
+uncheck which ack
+uncheck which rar
+uncheck which nano
+echo 'Apply install_brew.pp...'
+apply tests/install_brew.pp
+check which ack
+check which rar
+check which nano
+echo 'Apply uninstall.pp...'
+apply tests/uninstall.pp
+uncheck which ack
+uncheck which rar
+uncheck which nano
+
+uncheck which ack
+uncheck which rar
+uncheck which nano
+uncheck stat /Applications/Nano.app
+echo 'Apply install_homebrew.pp...'
+apply tests/install_homebrew.pp
+check which ack
+check which rar
+check which nano
+uncheck stat /Applications/Nano.app
+echo 'Apply uninstall.pp...'
+apply tests/uninstall.pp
+uncheck which ack
+uncheck which rar
+uncheck which nano
+uncheck stat /Applications/Nano.app
+
+echo 'Apply install_brewcask.pp...'
+apply tests/install_brewcask.pp
+check which ack
+check which rar
+uncheck which nano
+check stat /Applications/Nano.app
+echo 'Apply uninstall.pp...'
+apply tests/uninstall.pp
+uncheck which ack
+uncheck which rar
+uncheck which nano
+uncheck stat /Applications/Nano.app
+
+exit $FAILURES
