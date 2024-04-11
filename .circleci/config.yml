@@ -46,7 +46,7 @@ jobs:
           condition: << parameters.pdk_version >>
           steps:
             - run: puppet module build
-      - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
+      - run: sudo puppet module install pkg/thekevjames-homebrew-*.tar.gz
       - run: ./<< parameters.test_script >>
       - store_artifacts:
           path: pkg/

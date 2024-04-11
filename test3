@@ -2,7 +2,7 @@
 FAILURES=0
 
 apply() {
-    puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 2 ]
+    sudo puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 2 ]
     FAILURES=$((FAILURES + $?))
 }
 check() {
