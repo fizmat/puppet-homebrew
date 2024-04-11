@@ -1,14 +1,14 @@
 package { 'ack':
-  ensure   => latest,
+  ensure   => present,
   provider => brew,
 }
 
 package { 'rar':
-  ensure   => latest,
+  ensure   => present,
   provider => brew,
 }
 
 package { 'nano':
-  ensure   => latest,
+  ensure   => present,
   provider => brew,
 }
