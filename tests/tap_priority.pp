@@ -1,11 +1,11 @@
 Package <| provider == tap |> -> Package <| provider == homebrew |>
 
-package { 'homebrew/science':
+package { 'davidchall/hep':
   ensure   => present,
   provider => tap,
 }
 
-package { 'ncl':
+package { 'f2c':
   ensure   => present,
   provider => homebrew,
 }

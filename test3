@@ -27,7 +27,7 @@ check which gc2qif
 
 echo 'Apply tap_priority.pp...'
 apply tests/tap_priority.pp
-check brew list ncl
+check which f2c
 
 if [ "$FAILURES" -ne "0" ]; then
     exit 1
