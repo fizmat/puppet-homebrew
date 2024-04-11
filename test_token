@@ -1,18 +1,25 @@
 #!/usr/bin/env bash
 FAILURES=0
 
+apply_error() {
+    # expecting an error and a change, so code 6
+    echo "apply_error" $@
+    sudo puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 6 ] || echo 'Error' $((++FAILURES))
+}
 apply() {
+    echo "apply" $@
     sudo puppet apply --detailed-exitcodes --debug "$@" || [ $? -eq 2 ] || echo 'Error' $((++FAILURES))
 }
 check() {
+    echo "check" $@
     "$@" || echo 'Error' $((++FAILURES))
 }
 uncheck() {
+    echo "uncheck" $@
     ! "$@" || echo 'Error' $((++FAILURES))
 }
 
 uncheck cat /etc/environment | grep HOMEBREW_GITHUB_API_TOKEN
-echo 'Test apply token.pp...'
 apply tests/token.pp
 check which brew
 check cat /etc/environment | grep HOMEBREW_GITHUB_API_TOKEN
