@@ -45,7 +45,7 @@ jobs:
       - run: puppet parser validate --noop manifests/compiler.pp
       - run: pdk build
       - run: puppet module install pkg/thekevjames-homebrew-*.tar.gz
-      - run: ./<< parameters.test_name >>
+      - run: ./tests/<< parameters.test_name >>
       - store_artifacts:
           path: pkg/
 

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+source tests/util.bash
+
+echo 'Apply init.pp...'
+apply tests/init.pp
+check which brew
+
+if [ "$FAILURES" -ne "0" ]; then
+    exit 1
+fi
