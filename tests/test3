@@ -17,6 +17,4 @@ check which gc2qif
 apply tests/tap_priority.pp
 check brew list ncl
 
-if [ "$FAILURES" -ne "0" ]; then
-    exit 1
-fi
+exit $FAILURES

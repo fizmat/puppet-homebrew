@@ -5,6 +5,4 @@ source tests/util.bash
 apply tests/init.pp
 check which brew
 
-if [ "$FAILURES" -ne "0" ]; then
-    exit 1
-fi
+exit $FAILURES
