@@ -2,15 +2,19 @@ version: 2.1
 
 orbs:
   linter: talkiq/linter@4.0.0
+  macos: circleci/macos@2
 
 jobs:
   test:
-    docker:
-      - image: ruby:<< parameters.ruby_version >>
-    resource_class: small
+    macos:
+      xcode: << parameters.xcode_version >>
+    resource_class: macos.x86.medium.gen2
     environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
       STRICT_VARIABLES: "yes"
     parameters:
+      xcode_version:
+        type: string
       puppet_version:
         type: string
       ruby_version:
@@ -23,6 +27,8 @@ jobs:
         type: string
     steps:
       - checkout
+      - macos/switch-ruby:
+          version: << parameters.ruby_version >>
       - run: >-
           gem install -N
           << parameters.other_gems >>
@@ -52,60 +58,15 @@ workflows:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
-              other_gems:
-                -  '"public_suffix:~>3" "ffi:~>1.12.0" "cri:~>2.10.0"'
-              puppet_version:
-                - '~>4'
-                - '~>5'
-                # - '~>6' explicitly not compatible with ruby<2.3
-              ruby_version:
-                - '2.2.10'
-              pdk_version:
-                - '~>1'
-              lint_version:
-                - '~>2'
-      - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          matrix:
-            parameters:
-              other_gems:
-                - '"public_suffix:~>4" "ffi:~>1.15.0" "cri:<2.15.11"'
-              puppet_version:
-                - '~>4'
-                - '~>5'
-              ruby_version:
-                - '2.3.8'
-                - '2.4.10'
-              pdk_version:
-                - '~>1'
-              lint_version:
-                - '~>2'
-      - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          matrix:
-            parameters:
-              other_gems:
-                - '"public_suffix:~>4" "ffi:~>1.15.0" "cri:<2.15.11" "semantic_puppet:~>1.0.0" "thor:~>1.2.0" "facter:~>4.2.0"'
-              puppet_version:
-                - '~>6'
-              ruby_version:
-                - '2.3.8'
-                - '2.4.10'
-              pdk_version:
-                - '~>1'
-              lint_version:
-                - '~>2'
-      - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          matrix:
-            parameters:
+              xcode_version:
+                - 12.5.1
               other_gems:
                 - '"bundler:~>2.3.0" "public_suffix:~>4"'
               puppet_version:
                 - '~>4'
                 - '~>5'
               ruby_version:
-                - '2.5.9'
+                - '2.5'
               pdk_version:
                 - '~>2'
               lint_version:
@@ -114,13 +75,15 @@ workflows:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
+              xcode_version:
+                - 12.5.1
               other_gems:
                 - '"bundler:~>2.3.0" "public_suffix:~>4" "semantic_puppet:~>1.0.0"'
               puppet_version:
                 - '~>6'
                 - '~>7'
               ruby_version:
-                - '2.5.9'
+                - '2.5'
               pdk_version:
                 - '~>2'
               lint_version:
@@ -129,13 +92,15 @@ workflows:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
+              xcode_version:
+                - 13.4.1
               other_gems:
                 - '"bundler:~>2.4.0"'
               puppet_version:
                 - '~>4'
                 - '~>5'
               ruby_version:
-                - '2.6.10'
+                - '2.6'
               pdk_version:
                 - '~>2'
               lint_version:
@@ -144,13 +109,15 @@ workflows:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
+              xcode_version:
+                - 13.4.1
               other_gems:
                 - '"bundler:~>2.4.0" "semantic_puppet:~>1.0.0"'
               puppet_version:
                 - '~>6'
                 - '~>7'
               ruby_version:
-                - '2.6.10'
+                - '2.6'
               pdk_version:
                 - '~>2'
               lint_version:
@@ -159,6 +126,8 @@ workflows:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
+              xcode_version:
+                - 14.3.1
               other_gems:
                 - ''
               puppet_version:
@@ -166,7 +135,7 @@ workflows:
                 - '~>6'
                 - '~>7'
               ruby_version:
-                - '2.7.8'
+                - '2.7'
               pdk_version:
                 - '~>3'
               lint_version:
@@ -175,13 +144,15 @@ workflows:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
+              xcode_version:
+                - 15.3.0
               other_gems:
                 - ''
               puppet_version:
                 # - '~>6' URI.escape() droppd in 3.0,
                 - '~>7'
               ruby_version:
-                - '3.0.6'
+                - '3.0'
               pdk_version:
                 - '~>3'
               lint_version:
@@ -190,6 +161,8 @@ workflows:
           name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
           matrix:
             parameters:
+              xcode_version:
+                - 15.3.0
               other_gems:
                 - ''
               puppet_version:
@@ -197,9 +170,9 @@ workflows:
                 - '~>7'
                 - '~>8'
               ruby_version:
-                - '3.1.4'
-                - '3.2.3'
-                - '3.3.0'
+                - '3.1'
+                - '3.2'
+                - '3.3'
               pdk_version:
                 - '~>3'
               lint_version:
