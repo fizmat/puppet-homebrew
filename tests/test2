@@ -2,7 +2,6 @@
 
 source tests/util.bash
 
-echo 'Test apply token.pp...'
 apply tests/token.pp
 check cat /etc/environment | grep HOMEBREW_GITHUB_API_TOKEN
 

@@ -2,7 +2,6 @@
 
 source tests/util.bash
 
-echo 'Apply init.pp...'
 apply tests/init.pp
 check which brew
 
