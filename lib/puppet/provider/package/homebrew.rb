@@ -23,8 +23,8 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
   commands stat: '/usr/bin/stat'
 
   def self.execute(cmd, failonfail = false, combine = false)
-    owner = stat('-nf', '%Uu', @brewbin.to_s).to_i
-    group = stat('-nf', '%Ug', @brewbin.to_s).to_i
+    owner = stat('-nf', '%Uu', @brewbin).to_i
+    group = stat('-nf', '%Ug', @brewbin).to_i
     home  = Etc.getpwuid(owner).dir
 
     if owner.zero?
