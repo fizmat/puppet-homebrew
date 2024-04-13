@@ -107,46 +107,42 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
 
   def install
     begin
-      begin
-        Puppet.debug "Looking for #{install_name} package on brew..."
-        output = execute([command(:brew), :info, install_name], failonfail: true)
+      Puppet.debug "Looking for #{install_name} package on brew..."
+      output = execute([command(:brew), :info, install_name], failonfail: true)
 
-        Puppet.debug 'Package found, installing...'
-        output = execute([command(:brew), :install, install_name, *install_options], failonfail: true)
+      Puppet.debug 'Package found, installing...'
+      output = execute([command(:brew), :install, install_name, *install_options], failonfail: true)
 
-        if output =~ /sha256 checksum/
-          Puppet.debug 'Fixing checksum error...'
-          mismatched = output.match(/Already downloaded: (.*)/).captures
-          fix_checksum(mismatched)
-        end
-      rescue Puppet::ExecutionFailure
-        Puppet.debug "Package #{install_name} not found on Brew. Trying BrewCask..."
-        execute([command(:brew), :info, '--cask', install_name], failonfail: true)
-
-        Puppet.debug 'Package found on brewcask, installing...'
-        output = execute([command(:brew), :install, '--cask', install_name, *install_options], failonfail: true)
-
-        if output =~ /sha256 checksum/
-          Puppet.debug 'Fixing checksum error...'
-          mismatched = output.match(/Already downloaded: (.*)/).captures
-          fix_checksum(mismatched)
-        end
+      if output =~ /sha256 checksum/
+        Puppet.debug 'Fixing checksum error...'
+        mismatched = output.match(/Already downloaded: (.*)/).captures
+        fix_checksum(mismatched)
       end
-    rescue Puppet::ExecutionFailure => e
-      raise Puppet::Error, "Could not install package: #{e}"
+    rescue Puppet::ExecutionFailure
+      Puppet.debug "Package #{install_name} not found on Brew. Trying BrewCask..."
+      execute([command(:brew), :info, '--cask', install_name], failonfail: true)
+
+      Puppet.debug 'Package found on brewcask, installing...'
+      output = execute([command(:brew), :install, '--cask', install_name, *install_options], failonfail: true)
+
+      if output =~ /sha256 checksum/
+        Puppet.debug 'Fixing checksum error...'
+        mismatched = output.match(/Already downloaded: (.*)/).captures
+        fix_checksum(mismatched)
+      end
     end
+  rescue Puppet::ExecutionFailure => e
+    raise Puppet::Error, "Could not install package: #{e}"
   end
 
   def uninstall
+    Puppet.debug "Uninstalling #{resource_name}"
+    execute([command(:brew), :uninstall, resource_name], failonfail: true)
+  rescue Puppet::ExecutionFailure
     begin
-      Puppet.debug "Uninstalling #{resource_name}"
-      execute([command(:brew), :uninstall, resource_name], failonfail: true)
-    rescue Puppet::ExecutionFailure
-      begin
-        execute([command(:brew), :uninstall, '--cask', resource_name], failonfail: true)
-      rescue Puppet::ExecutionFailure => e
-        raise Puppet::Error, "Could not uninstall package: #{e}"
-      end
+      execute([command(:brew), :uninstall, '--cask', resource_name], failonfail: true)
+    rescue Puppet::ExecutionFailure => e
+      raise Puppet::Error, "Could not uninstall package: #{e}"
     end
   end
 
