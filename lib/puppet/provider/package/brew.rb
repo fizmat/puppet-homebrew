@@ -109,7 +109,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
     begin
       Puppet.debug "Looking for #{install_name} package..."
       execute([command(:brew), :info, install_name], :failonfail => true)
-    rescue Puppet::ExecutionFailure => detail
+    rescue Puppet::ExecutionFailure
       raise Puppet::Error, "Could not find package: #{install_name}"
     end
 
