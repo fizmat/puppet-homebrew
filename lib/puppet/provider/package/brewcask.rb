@@ -158,9 +158,9 @@ Puppet::Type.type(:package).provide(:brewcask, parent: Puppet::Provider::Package
     end
 
     if options[:justme]
-      return list.shift
+      list.shift
     else
-      return list
+      list
     end
   end
 

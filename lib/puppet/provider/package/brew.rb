@@ -166,17 +166,17 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
     if options[:justme]
       if lines.empty?
         Puppet.debug "Package #{options[:justme]} not installed"
-        return nil
+        nil
       else
         if lines.length > 1
           Puppet.warning "Multiple matches for package #{options[:justme]} - using first one found"
         end
         line = lines.shift
         Puppet.debug "Found package #{line}"
-        return name_version_split(line)
+        name_version_split(line)
       end
     else
-      return lines.map{ |s| name_version_split(s) }
+      lines.map{ |s| name_version_split(s) }
     end
   end
 
