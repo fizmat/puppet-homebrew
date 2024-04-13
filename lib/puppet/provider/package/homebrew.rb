@@ -63,9 +63,7 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
 
   def fix_checksum(files)
     begin
-      for file in files
-        File.delete(file)
-      end
+      files.each { |file| File.delete(file) }
     rescue Errno::ENOENT
       Puppet.warning "Could not remove mismatched checksum files #{files}"
     end
