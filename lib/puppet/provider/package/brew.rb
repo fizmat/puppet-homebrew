@@ -1,9 +1,9 @@
 require 'puppet/provider/package'
 
-Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package) do
+Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
   desc 'Package management using HomeBrew on OSX'
 
-  confine :operatingsystem => :darwin
+  confine operatingsystem: :darwin
 
   has_feature :installable
   has_feature :uninstallable
@@ -19,8 +19,8 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
     @brewbin = '/opt/homebrew/bin/brew'
   end
 
-  commands :brew => @brewbin
-  commands :stat => '/usr/bin/stat'
+  commands brew: @brewbin
+  commands stat: '/usr/bin/stat'
 
   def self.execute(cmd, failonfail = false, combine = false)
     owner = stat('-nf', '%Uu', "#{@brewbin}").to_i
@@ -42,12 +42,12 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
 
     if Puppet.features.bundled_environment?
       Bundler.with_clean_env do
-        super(cmd, :uid => uid, :gid => gid, :combine => combine,
-              :custom_environment => { 'HOME' => home }, :failonfail => failonfail)
+        super(cmd, uid: uid, gid: gid, combine: combine,
+              custom_environment: { 'HOME' => home }, failonfail: failonfail)
       end
     else
-      super(cmd, :uid => uid, :gid => gid, :combine => combine,
-            :custom_environment => { 'HOME' => home }, :failonfail => failonfail)
+      super(cmd, uid: uid, gid: gid, combine: combine,
+            custom_environment: { 'HOME' => home }, failonfail: failonfail)
     end
   end
 
@@ -97,25 +97,24 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
   end
 
   def latest
-    package = self.class.package_list(:justme => resource_name)
+    package = self.class.package_list(justme: resource_name)
     package[:ensure]
   end
 
   def query
-    self.class.package_list(:justme => resource_name)
+    self.class.package_list(justme: resource_name)
   end
 
   def install
     begin
       Puppet.debug "Looking for #{install_name} package..."
-      execute([command(:brew), :info, install_name], :failonfail => true)
     rescue Puppet::ExecutionFailure
       raise Puppet::Error, "Could not find package: #{install_name}"
     end
 
     begin
       Puppet.debug "Package found, installing..."
-      output = execute([command(:brew), :install, install_name, *install_options], :failonfail => true)
+      output = execute([command(:brew), :install, install_name, *install_options], failonfail: true)
 
       if output =~ /sha256 checksum/
         Puppet.debug "Fixing checksum error..."
@@ -130,7 +129,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
   def uninstall
     begin
       Puppet.debug "Uninstalling #{resource_name}"
-      execute([command(:brew), :uninstall, resource_name], :failonfail => true)
+      execute([command(:brew), :uninstall, resource_name], failonfail: true)
     rescue Puppet::ExecutionFailure => e
       raise Puppet::Error, "Could not uninstall package: #{e}"
     end
@@ -139,7 +138,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
   def update
     begin
       Puppet.debug "Upgrading #{resource_name}"
-      execute([command(:brew), :upgrade, resource_name], :failonfail => true)
+      execute([command(:brew), :upgrade, resource_name], failonfail: true)
     rescue Puppet::ExecutionFailure => e
       raise Puppet::Error, "Could not upgrade package: #{e}"
     end
@@ -188,9 +187,9 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
   def self.name_version_split(line)
     if line =~ (/^(\S+)\s+(.+)/)
       {
-        :name     => $1,
-        :ensure   => $2,
-        :provider => :brew
+        name:     $1,
+        ensure:   $2,
+        provider: :brew
       }
     else
       Puppet.warning "Could not match #{line}"

@@ -13,7 +13,7 @@
 #   None
 
 Facter.add(:has_compiler) do
-  confine :operatingsystem => 'Darwin'
+  confine operatingsystem: 'Darwin'
   setcode do
     # /usr/bin/cc exists in Mavericks, but it's not real
     if Gem::Version.new(Facter.value(:macosx_productversion_major)) >= Gem::Version.new('10.9')
