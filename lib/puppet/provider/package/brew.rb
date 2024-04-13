@@ -51,7 +51,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
     end
   end
 
-  def self.instances(justme = false)
+  def self.instances
     package_list.collect { |hash| new(hash) }
   end
 
