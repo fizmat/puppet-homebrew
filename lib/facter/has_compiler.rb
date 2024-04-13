@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Fact: has_compiler
 #
 # Purpose: check if Xcode Command Line Tools is installed

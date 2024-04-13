@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Fact: has_brew
 #
 # Purpose: check if brew is installed
