@@ -145,9 +145,7 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
     Puppet.debug 'Listing installed packages'
 
     cmd_line = [command(:brew), :list, '--versions']
-    if options[:justme]
-      cmd_line += [options[:justme]]
-    end
+    cmd_line.push(options[:justme]) if options[:justme]
 
     begin
       cmd_output = execute(cmd_line)
