@@ -97,12 +97,12 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
   end
 
   def latest
-    package = self.class.package_list(justme: resource_name)
+    package = self.class.package_info(resource_name)
     package[:ensure]
   end
 
   def query
-    self.class.package_list(justme: resource_name)
+    self.class.package_info(resource_name)
   end
 
   def install
@@ -151,32 +151,32 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
     install
   end
 
-  def self.package_list(options = {})
-    Puppet.debug 'Listing installed packages'
+  def self.package_list
+    Puppet.debug "Listing installed packages"
     begin
-      if (resource_name = options[:justme])
-        result = execute([command(:brew), :list, '--versions', resource_name])
-        unless result.include? resource_name
-          result += execute([command(:brew), :list, '--cask', '--versions', resource_name])
-        end
-        if result.empty?
-          Puppet.debug "Package #{resource_name} not installed"
-        else
-          Puppet.debug "Found package #{result}"
-        end
-      else
-        result = execute([command(:brew), :list, '--versions'])
-        result += execute([command(:brew), :list, '--cask', '--versions'])
-      end
-      list = result.lines.map { |line| name_version_split(line) }
-    rescue Puppet::ExecutionFailure => e
-      raise Puppet::Error, "Could not list packages: #{e}"
+      result = execute([command(:brew), :list, '--versions'])
+      result += execute([command(:brew), :list, '--cask', '--versions'])
+      result.lines.map {|line| name_version_split(line)}
+    rescue Puppet::ExecutionFailure => detail
+      raise Puppet::Error, "Could not list packages: #{detail}"
     end
+  end
 
-    if options[:justme]
-      list.shift
-    else
-      list
+  def self.package_info(resource_name)
+    Puppet.debug "Linsting installed package info"
+    begin
+      result = execute([command(:brew), :list, '--versions', resource_name])
+      unless result.include? resource_name
+        result += execute([command(:brew), :list, '--cask', '--versions', resource_name])
+      end
+      if result.empty?
+        Puppet.debug "Package #{resource_name} not installed"
+      else
+        Puppet.debug "Found package #{result}"
+      end
+      name_version_split(lines.shift)
+    rescue Puppet::ExecutionFailure => detail
+      raise Puppet::Error, "Could not list packages: #{detail}"
     end
   end
 
