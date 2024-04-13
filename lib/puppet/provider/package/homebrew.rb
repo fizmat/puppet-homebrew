@@ -174,9 +174,9 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
     end
 
     if options[:justme]
-      return list.shift
+      list.shift
     else
-      return list
+      list
     end
   end
 
