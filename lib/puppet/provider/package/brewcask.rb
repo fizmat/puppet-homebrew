@@ -137,7 +137,7 @@ Puppet::Type.type(:package).provide(:brewcask, parent: Puppet::Provider::Package
     install
   end
 
-  def self.package_list(options={})
+  def self.package_list(options = {})
     Puppet.debug 'Listing installed packages'
     begin
       if (resource_name = options[:justme])
@@ -150,7 +150,7 @@ Puppet::Type.type(:package).provide(:brewcask, parent: Puppet::Provider::Package
       else
         result = execute([command(:brew), :list, '--cask', '--versions'])
       end
-      list = result.lines.map {|line| name_version_split(line)}
+      list = result.lines.map { |line| name_version_split(line) }
     rescue Puppet::ExecutionFailure => e
       raise Puppet::Error, "Could not list packages: #{e}"
     end
