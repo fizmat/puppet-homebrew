@@ -138,12 +138,12 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
     raise Puppet::Error, "Could not upgrade package: #{e}"
   end
 
-  def self.package_list(options={})
+  def self.package_list(options = {})
     Puppet.debug 'Listing installed packages'
 
     cmd_line = [command(:brew), :list, '--versions']
     if options[:justme]
-      cmd_line += [ options[:justme] ]
+      cmd_line += [options[:justme]]
     end
 
     begin
@@ -174,7 +174,7 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
         name_version_split(line)
       end
     else
-      lines.map{ |s| name_version_split(s) }
+      lines.map { |s| name_version_split(s) }
     end
   end
 
