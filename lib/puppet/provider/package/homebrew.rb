@@ -183,8 +183,8 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
   def self.name_version_split(line)
     if line =~ (/^(\S+)\s+(.+)/)
       {
-        name:     $1,
-        ensure:   $2,
+        name:     Regexp.last_match(1),
+        ensure:   Regexp.last_match(2),
         provider: :homebrew
       }
     else
