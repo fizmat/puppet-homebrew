@@ -104,7 +104,7 @@ Puppet::Type.type(:package).provide(:tap, parent: Puppet::Provider::Package) do
     taps = []
 
     begin
-      Puppet.debug "Listing currently tapped repositories"
+      Puppet.debug 'Listing currently tapped repositories'
       output = execute([command(:brew), :tap])
       output.each_line do |line|
         line.chomp!

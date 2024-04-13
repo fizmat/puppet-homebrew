@@ -1,7 +1,7 @@
 require 'puppet/provider/package'
 
 Puppet::Type.type(:package).provide(:brewcask, parent: Puppet::Provider::Package) do
-  desc "Package management using HomeBrew casks on OSX"
+  desc 'Package management using HomeBrew casks on OSX'
 
   confine operatingsystem: :darwin
 
@@ -114,11 +114,11 @@ Puppet::Type.type(:package).provide(:brewcask, parent: Puppet::Provider::Package
     end
 
     begin
-      Puppet.debug "Package found, installing..."
+      Puppet.debug 'Package found, installing...'
       output = execute([command(:brew), :install, '--cask', install_name, *install_options], failonfail: true)
 
       if output =~ /sha256 checksum/
-        Puppet.debug "Fixing checksum error..."
+        Puppet.debug 'Fixing checksum error...'
         mismatched = output.match(/Already downloaded: (.*)/).captures
         fix_checksum(mismatched)
       end
@@ -142,7 +142,7 @@ Puppet::Type.type(:package).provide(:brewcask, parent: Puppet::Provider::Package
   end
 
   def self.package_list(options={})
-    Puppet.debug "Listing installed packages"
+    Puppet.debug 'Listing installed packages'
     begin
       if (resource_name = options[:justme])
         result = execute([command(:brew), :list, '--cask', '--versions', resource_name])
