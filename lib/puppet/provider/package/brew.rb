@@ -72,7 +72,7 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
   end
 
   def resource_name
-    if @resource[:name].match(/^https?:\/\//)
+    if @resource[:name].match(%r{^https?://})
       @resource[:name]
     else
       @resource[:name].downcase
@@ -114,9 +114,9 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
       Puppet.debug 'Package found, installing...'
       output = execute([command(:brew), :install, install_name, *install_options], failonfail: true)
 
-      if output =~ /sha256 checksum/
+      if output =~ %r{sha256 checksum}
         Puppet.debug 'Fixing checksum error...'
-        mismatched = output.match(/Already downloaded: (.*)/).captures
+        mismatched = output.match(%r{Already downloaded: (.*)}).captures
         fix_checksum(mismatched)
       end
     rescue Puppet::ExecutionFailure => e
@@ -156,8 +156,8 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
     # logic below.  These look like they should be on stderr anyway based
     # on comparison to other output on stderr.  homebrew bug?
     re_excludes = Regexp.union([
-      /^==>.*/,
-      /^Tapped \d+ formulae.*/,
+      %r{^==>.*},
+      %r{^Tapped \d+ formulae.*},
       ])
     lines = cmd_output.lines.delete_if { |line| line.match(re_excludes) }
 
@@ -179,7 +179,7 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
   end
 
   def self.name_version_split(line)
-    if line =~ (/^(\S+)\s+(.+)/)
+    if line =~ (%r{^(\S+)\s+(.+)})
       {
         name:     Regexp.last_match(1),
         ensure:   Regexp.last_match(2),

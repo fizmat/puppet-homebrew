@@ -72,7 +72,7 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
   end
 
   def resource_name
-    if @resource[:name].match(/^https?:\/\//)
+    if @resource[:name].match(%r{^https?://})
       @resource[:name]
     else
       @resource[:name].downcase
@@ -111,9 +111,9 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
       Puppet.debug 'Package found, installing...'
       output = execute([command(:brew), :install, install_name, *install_options], failonfail: true)
 
-      if output =~ /sha256 checksum/
+      if output =~ %r{sha256 checksum}
         Puppet.debug 'Fixing checksum error...'
-        mismatched = output.match(/Already downloaded: (.*)/).captures
+        mismatched = output.match(%r{Already downloaded: (.*)}).captures
         fix_checksum(mismatched)
       end
     rescue Puppet::ExecutionFailure
@@ -123,9 +123,9 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
       Puppet.debug 'Package found on brewcask, installing...'
       output = execute([command(:brew), :install, '--cask', install_name, *install_options], failonfail: true)
 
-      if output =~ /sha256 checksum/
+      if output =~ %r{sha256 checksum}
         Puppet.debug 'Fixing checksum error...'
-        mismatched = output.match(/Already downloaded: (.*)/).captures
+        mismatched = output.match(%r{Already downloaded: (.*)}).captures
         fix_checksum(mismatched)
       end
     end
@@ -179,7 +179,7 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
   end
 
   def self.name_version_split(line)
-    if line =~ (/^(\S+)\s+(.+)/)
+    if line =~ (%r{^(\S+)\s+(.+)})
       {
         name:     Regexp.last_match(1),
         ensure:   Regexp.last_match(2),
