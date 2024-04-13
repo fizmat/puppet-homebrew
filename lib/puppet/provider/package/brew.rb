@@ -127,21 +127,17 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
   end
 
   def uninstall
-    begin
-      Puppet.debug "Uninstalling #{resource_name}"
-      execute([command(:brew), :uninstall, resource_name], failonfail: true)
-    rescue Puppet::ExecutionFailure => e
-      raise Puppet::Error, "Could not uninstall package: #{e}"
-    end
+    Puppet.debug "Uninstalling #{resource_name}"
+    execute([command(:brew), :uninstall, resource_name], failonfail: true)
+  rescue Puppet::ExecutionFailure => e
+    raise Puppet::Error, "Could not uninstall package: #{e}"
   end
 
   def update
-    begin
-      Puppet.debug "Upgrading #{resource_name}"
-      execute([command(:brew), :upgrade, resource_name], failonfail: true)
-    rescue Puppet::ExecutionFailure => e
-      raise Puppet::Error, "Could not upgrade package: #{e}"
-    end
+    Puppet.debug "Upgrading #{resource_name}"
+    execute([command(:brew), :upgrade, resource_name], failonfail: true)
+  rescue Puppet::ExecutionFailure => e
+    raise Puppet::Error, "Could not upgrade package: #{e}"
   end
 
   def self.package_list(options={})
