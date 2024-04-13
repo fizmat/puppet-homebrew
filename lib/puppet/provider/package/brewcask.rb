@@ -128,12 +128,10 @@ Puppet::Type.type(:package).provide(:brewcask, parent: Puppet::Provider::Package
   end
 
   def uninstall
-    begin
-      Puppet.debug "Uninstalling #{resource_name}"
-      execute([command(:brew), :uninstall, '--cask', resource_name], failonfail: true)
-    rescue Puppet::ExecutionFailure => e
-      raise Puppet::Error, "Could not uninstall package: #{e}"
-    end
+    Puppet.debug "Uninstalling #{resource_name}"
+    execute([command(:brew), :uninstall, '--cask', resource_name], failonfail: true)
+  rescue Puppet::ExecutionFailure => e
+    raise Puppet::Error, "Could not uninstall package: #{e}"
   end
 
   def update
