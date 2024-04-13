@@ -27,12 +27,12 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
     group = stat('-nf', '%Ug', "#{@brewbin}").to_i
     home  = Etc.getpwuid(owner).dir
 
-    if owner == 0
+    if owner.zero?
       raise Puppet::ExecutionFailure, 'Homebrew does not support installations owned by the "root" user. Please check the permissions of /usr/local/bin/brew'
     end
 
     # the uid and gid can only be set if running as root
-    if Process.uid == 0
+    if Process.uid.zero?
       uid = owner
       gid = group
     else
