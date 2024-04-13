@@ -111,11 +111,11 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
         Puppet.debug "Looking for #{install_name} package on brew..."
         output = execute([command(:brew), :info, install_name], failonfail: true)
 
-        Puppet.debug "Package found, installing..."
+        Puppet.debug 'Package found, installing...'
         output = execute([command(:brew), :install, install_name, *install_options], failonfail: true)
 
         if output =~ /sha256 checksum/
-          Puppet.debug "Fixing checksum error..."
+          Puppet.debug 'Fixing checksum error...'
           mismatched = output.match(/Already downloaded: (.*)/).captures
           fix_checksum(mismatched)
         end
@@ -123,11 +123,11 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
         Puppet.debug "Package #{install_name} not found on Brew. Trying BrewCask..."
         execute([command(:brew), :info, '--cask', install_name], failonfail: true)
 
-        Puppet.debug "Package found on brewcask, installing..."
+        Puppet.debug 'Package found on brewcask, installing...'
         output = execute([command(:brew), :install, '--cask', install_name, *install_options], failonfail: true)
 
         if output =~ /sha256 checksum/
-          Puppet.debug "Fixing checksum error..."
+          Puppet.debug 'Fixing checksum error...'
           mismatched = output.match(/Already downloaded: (.*)/).captures
           fix_checksum(mismatched)
         end
@@ -156,7 +156,7 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
   end
 
   def self.package_list(options={})
-    Puppet.debug "Listing installed packages"
+    Puppet.debug 'Listing installed packages'
     begin
       if (resource_name = options[:justme])
         result = execute([command(:brew), :list, '--versions', resource_name])
