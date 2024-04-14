@@ -1,14 +1,14 @@
-*.iml
-.*.sw[op]
 .git/
+.*.sw[op]
 .metadata
 .yardoc
 .yardwarns
+*.iml
 /.bundle/
 /.idea/
 /.vagrant/
-/bin/
 /coverage/
+/bin/
 /doc/
 /Gemfile.local
 /Gemfile.lock
@@ -19,3 +19,6 @@
 /spec/fixtures/modules/
 /tmp/
 /vendor/
+/convert_report.txt
+/update_report.txt
+.DS_Store
