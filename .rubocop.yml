@@ -124,3 +124,5 @@ Style/IfUnlessModifier:
   Enabled: false
 Style/SymbolProc:
   Enabled: false
+Layout/HashAlignment:
+  Enabled: false
