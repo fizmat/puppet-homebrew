@@ -52,7 +52,7 @@ Puppet::Type.type(:package).provide(:brewcask, parent: Puppet::Provider::Package
   end
 
   def self.instances
-    package_list.collect { |hash| new(hash) }
+    package_list.map { |hash| new(hash) }
   end
 
   def execute(*args)
