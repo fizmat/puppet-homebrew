@@ -181,7 +181,7 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
         return name_version_split(line)
       end
     else
-      return lines.map{ |line| name_version_split(line) }
+      return lines.map{ |s| name_version_split(s) }
     end
   end
 
