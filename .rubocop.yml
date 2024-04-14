@@ -128,3 +128,7 @@ Layout/HashAlignment:
   Enabled: false
 Style/DoubleNegation:
   Enabled: false
+Style/MixinUsage:
+  Description: Puppet template authors probably know what they're doing
+  Exclude:
+    - spec/spec_helper.rb
