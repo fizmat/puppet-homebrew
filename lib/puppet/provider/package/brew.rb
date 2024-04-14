@@ -158,9 +158,9 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
     # logic below.  These look like they should be on stderr anyway based
     # on comparison to other output on stderr.  homebrew bug?
     re_excludes = Regexp.union([
-      %r{^==>.*},
-      %r{^Tapped \d+ formulae.*},
-      ])
+                                 %r{^==>.*},
+                                 %r{^Tapped \d+ formulae.*},
+                               ])
     lines = cmd_output.lines.delete_if { |line| line.match(re_excludes) }
 
     if options[:justme]
