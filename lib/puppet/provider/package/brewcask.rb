@@ -169,7 +169,7 @@ Puppet::Type.type(:package).provide(:brewcask, parent: Puppet::Provider::Package
       {
         name:     Regexp.last_match(1),
         ensure:   Regexp.last_match(2),
-        provider: :brewcask
+        provider: :brewcask,
       }
     else
       Puppet.warning "Could not match #{line}"

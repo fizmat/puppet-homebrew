@@ -185,7 +185,7 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
       {
         name:     Regexp.last_match(1),
         ensure:   Regexp.last_match(2),
-        provider: :brew
+        provider: :brew,
       }
     else
       Puppet.warning "Could not match #{line}"
