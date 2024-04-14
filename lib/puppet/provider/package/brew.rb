@@ -122,8 +122,8 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
         mismatched = output.match(/Already downloaded: (.*)/).captures
         fix_checksum(mismatched)
       end
-    rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not install package: #{detail}"
+    rescue Puppet::ExecutionFailure => e
+      raise Puppet::Error, "Could not install package: #{e}"
     end
   end
 
@@ -131,8 +131,8 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
     begin
       Puppet.debug "Uninstalling #{resource_name}"
       execute([command(:brew), :uninstall, resource_name], :failonfail => true)
-    rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not uninstall package: #{detail}"
+    rescue Puppet::ExecutionFailure => e
+      raise Puppet::Error, "Could not uninstall package: #{e}"
     end
   end
 
@@ -140,8 +140,8 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
     begin
       Puppet.debug "Upgrading #{resource_name}"
       execute([command(:brew), :upgrade, resource_name], :failonfail => true)
-    rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not upgrade package: #{detail}"
+    rescue Puppet::ExecutionFailure => e
+      raise Puppet::Error, "Could not upgrade package: #{e}"
     end
   end
 
@@ -155,8 +155,8 @@ Puppet::Type.type(:package).provide(:brew, :parent => Puppet::Provider::Package)
 
     begin
       cmd_output = execute(cmd_line)
-    rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not list packages: #{detail}"
+    rescue Puppet::ExecutionFailure => e
+      raise Puppet::Error, "Could not list packages: #{e}"
     end
 
     # Exclude extraneous lines from stdout that interfere with the parsing
