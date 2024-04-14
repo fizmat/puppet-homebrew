@@ -122,8 +122,8 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
         mismatched = output.match(/Already downloaded: (.*)/).captures
         fix_checksum(mismatched)
       end
-    rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not install package: #{detail}"
+    rescue Puppet::ExecutionFailure => e
+      raise Puppet::Error, "Could not install package: #{e}"
     end
   end
 
@@ -131,8 +131,8 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
     begin
       Puppet.debug "Uninstalling #{resource_name}"
       execute([command(:brew), :uninstall, '--cask', resource_name], :failonfail => true)
-    rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not uninstall package: #{detail}"
+    rescue Puppet::ExecutionFailure => e
+      raise Puppet::Error, "Could not uninstall package: #{e}"
     end
   end
 
@@ -155,8 +155,8 @@ Puppet::Type.type(:package).provide(:brewcask, :parent => Puppet::Provider::Pack
         result = execute([command(:brew), :list, '--cask', '--versions'])
       end
       list = result.lines.map {|line| name_version_split(line)}
-    rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not list packages: #{detail}"
+    rescue Puppet::ExecutionFailure => e
+      raise Puppet::Error, "Could not list packages: #{e}"
     end
 
     if options[:justme]
