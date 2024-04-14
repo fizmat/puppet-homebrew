@@ -65,8 +65,8 @@ Puppet::Type.type(:package).provide(:tap, :parent => Puppet::Provider::Package) 
     begin
       Puppet.debug "Tapping #{resource_name}"
       execute([command(:brew), :tap, resource_name, *install_options], :failonfail => true)
-    rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not tap resource: #{detail}"
+    rescue Puppet::ExecutionFailure => e
+      raise Puppet::Error, "Could not tap resource: #{e}"
     end
   end
 
@@ -76,8 +76,8 @@ Puppet::Type.type(:package).provide(:tap, :parent => Puppet::Provider::Package) 
     begin
       Puppet.debug "Untapping #{resource_name}"
       execute([command(:brew), :untap, resource_name], :failonfail => true)
-    rescue Puppet::ExecutionFailure => detail
-      raise Puppet::Error, "Could not untap resource: #{detail}"
+    rescue Puppet::ExecutionFailure => e
+      raise Puppet::Error, "Could not untap resource: #{e}"
     end
   end
 
@@ -93,8 +93,8 @@ Puppet::Type.type(:package).provide(:tap, :parent => Puppet::Provider::Package) 
 
         return { :name => line, :ensure => 'present', :provider => 'tap' }
       end
-    rescue Puppet::ExecutionFailure => detail
-      Puppet.Err "Could not query tap: #{detail}"
+    rescue Puppet::ExecutionFailure => e
+      Puppet.Err "Could not query tap: #{e}"
     end
 
     nil
@@ -113,8 +113,8 @@ Puppet::Type.type(:package).provide(:tap, :parent => Puppet::Provider::Package) 
         taps << new({ :name => line, :ensure => 'present', :provider => 'tap' })
       end
       taps
-    rescue Puppet::ExecutionFailure => detail
-      Puppet.Err "Could not list taps: #{detail}"
+    rescue Puppet::ExecutionFailure => e
+      Puppet.Err "Could not list taps: #{e}"
       nil
     end
   end
