@@ -126,3 +126,5 @@ Style/SymbolProc:
   Enabled: false
 Layout/HashAlignment:
   Enabled: false
+Style/DoubleNegation:
+  Enabled: false
