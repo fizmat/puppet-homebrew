@@ -138,3 +138,5 @@ Style/SymbolProc:
 Layout/AlignHash:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
+Style/DoubleNegation:
+  Enabled: false
