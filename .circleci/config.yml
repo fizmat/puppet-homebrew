@@ -42,6 +42,27 @@ jobs:
       - store_artifacts:
           path: pkg/
 
+  build:
+    docker:
+      - image: ruby:<< parameters.ruby_version >>
+    environment:
+      PUPPET_GEM_VERSION: << parameters.puppet_version >>
+    parameters:
+      puppet_version:
+        type: string
+      ruby_version:
+        type: string
+      pdk_version:
+        type: string
+    steps:
+      - checkout
+      - run: gem install "pdk:<< parameters.pdk_version >>"
+      - run: pdk build
+      - persist_to_workspace:
+          root: pkg
+          paths:
+            - thekevjames-homebrew-1.9.1.tar.gz
+
   rake:
     docker:
       - image: ruby:<< parameters.ruby_version >>
@@ -56,8 +77,6 @@ jobs:
         type: string
     steps:
       - checkout
-      - run: bundle -v
-      - run: gem --version
       - run: bundle install
       - run: bundle exec rake << parameters.check >>
 
