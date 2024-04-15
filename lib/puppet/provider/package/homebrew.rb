@@ -74,7 +74,7 @@ Puppet::Type.type(:package).provide(:homebrew, parent: Puppet::Provider::Package
   end
 
   def resource_name
-    if @resource[:name].match(%r{^https?://})
+    if @resource[:name] =~ %r{^https?://}
       @resource[:name]
     else
       @resource[:name].downcase
