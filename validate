@@ -1,6 +1,6 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
-eval "$(rbenv init - zsh)"
+eval "$(rbenv init - bash)"
 
 pdk_version=1.7.1
 ruby_version=${1:-2.7.8}
