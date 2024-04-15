@@ -42,6 +42,25 @@ jobs:
       - store_artifacts:
           path: pkg/
 
+  rake:
+    docker:
+      - image: ruby:<< parameters.ruby_version >>
+    environment:
+      PUPPET_GEM_VERSION: << parameters.puppet_version >>
+    parameters:
+      puppet_version:
+        type: string
+      ruby_version:
+        type: string
+      check:
+        type: string
+    steps:
+      - checkout
+      - run: bundle -v
+      - run: gem --version
+      - run: bundle install
+      - run: bundle exec rake << parameters.check >>
+
 workflows:
   run-jobs:
     jobs:
@@ -75,3 +94,34 @@ workflows:
                 - '2.5.9'
                 - '2.6.7'
                 - '2.7.3'
+
+      - rake:
+          name: syntax
+          ruby_version: 2.4.4
+          puppet_version: ~>5.5
+          check: syntax lint metadata_lint check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop
+      - rake:
+          name: unit-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          check: parallel_spec
+          matrix:
+            parameters:
+              ruby_version:
+                - '2.2.0'
+                - '2.2.10'
+                - '2.3.0'
+                - '2.3.8'
+                - '2.4.0'
+                - '2.4.10'
+                - '2.5.0'
+                - '2.5.9'
+                - '2.6.0'
+                - '2.6.10'
+                - '2.7.0'
+                - '2.7.8'
+              puppet_version:
+                - '~>4.0.0'
+                - '~>4.0'
+                - '~>5.0.0'
+                - '~>5.0'
+                - '~>6.0.0'
+                - '~>6.0'
