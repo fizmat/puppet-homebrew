@@ -125,7 +125,6 @@ workflows:
           matrix:
             parameters:
               ruby_version:
-                - 2.3.8
                 - 2.4.0
                 - 2.4.10
               puppet_version:
