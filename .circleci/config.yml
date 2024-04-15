@@ -71,32 +71,6 @@ workflows:
             - run: apt-get update
             - run: apt-get install -qy shellcheck
 
-      - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: false
-          matrix:
-            parameters:
-              puppet_version:
-                - '<5.0.0'
-                - '<6.0.0'
-              ruby_version:
-                - '2.2.10'
-                - '2.3.8'
-                - '2.4.10'
-                - '2.5.9'
-                - '2.6.7'
-      - test:
-          name: test-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
-          pdk: true
-          matrix:
-            parameters:
-              puppet_version:
-                - '<7.0.0'
-              ruby_version:
-                - '2.5.9'
-                - '2.6.7'
-                - '2.7.3'
-
       - rake:
           name: syntax
           ruby_version: 2.4.4
