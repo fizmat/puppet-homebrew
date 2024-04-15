@@ -50,18 +50,33 @@ jobs:
     environment:
       PUPPET_GEM_VERSION: << parameters.puppet_version >>
     parameters:
-      puppet_version:
-        type: string
       ruby_version:
+        type: string
+      puppet_version:
         type: string
       check:
         type: string
     steps:
       - checkout
-      - run: bundle -v
-      - run: gem --version
       - run: bundle install
       - run: bundle exec rake << parameters.check >>
+
+  validate:
+    docker:
+      - image: ruby:<< parameters.ruby_version >>
+    resource_class: small
+    parameters:
+      ruby_version:
+        type: string
+      puppet_version:
+        type: string
+      pdk_version:
+        type: string
+    steps:
+      - checkout
+      - run: gem install pdk:<< parameters.pdk_version>>
+      - run: pdk validate --puppet-version=<< parameters.puppet_version >> || true
+      - run: pdk validate --puppet-version=<< parameters.puppet_version >>
 
 workflows:
   run-jobs:
@@ -70,6 +85,11 @@ workflows:
           pre-steps:
             - run: apt-get update
             - run: apt-get install -qy shellcheck
+
+      - validate:
+          ruby_version: 2.7.8
+          puppet_version: 6.29.0
+          pdk_version: 1.7.1
 
       - rake:
           name: syntax
