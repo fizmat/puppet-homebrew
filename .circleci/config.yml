@@ -7,6 +7,7 @@ jobs:
   test:
     docker:
       - image: ruby:<< parameters.ruby_version >>
+    resource_class: small
     environment:
       STRICT_VARIABLES: "yes"
     parameters:
@@ -45,6 +46,7 @@ jobs:
   rake:
     docker:
       - image: ruby:<< parameters.ruby_version >>
+    resource_class: small
     environment:
       PUPPET_GEM_VERSION: << parameters.puppet_version >>
     parameters:
