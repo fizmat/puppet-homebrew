@@ -74,7 +74,7 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
   end
 
   def resource_name
-    if @resource[:name] =~ %r{^https?://}
+    if @resource[:name].match? %r{^https?://}
       @resource[:name]
     else
       @resource[:name].downcase
@@ -116,7 +116,7 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
       Puppet.debug 'Package found, installing...'
       output = execute([command(:brew), :install, install_name, *install_options], failonfail: true)
 
-      if output =~ %r{sha256 checksum}
+      if output.include? 'sha256 checksum'
         Puppet.debug 'Fixing checksum error...'
         mismatched = output.match(%r{Already downloaded: (.*)}).captures
         fix_checksum(mismatched)
