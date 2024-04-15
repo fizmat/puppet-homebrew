@@ -17,6 +17,8 @@
 Facter.add(:has_brew) do
   confine operatingsystem: 'Darwin'
   setcode do
-    File.exist?('/usr/local/bin/brew') or File.exist?('/opt/homebrew/bin/brew') or system('brew --version >/dev/null 2>&1')
+    File.exist?('/usr/local/bin/brew') ||
+      File.exist?('/opt/homebrew/bin/brew') ||
+      system('brew --version >/dev/null 2>&1')
   end
 end
