@@ -89,12 +89,12 @@ workflows:
       - validate:
           ruby_version: 2.7.8
           puppet_version: 6.29.0
-          pdk_version: 1.7.1
+          pdk_version: 1.18.1
 
       - rake:
           name: syntax
-          ruby_version: 2.4.4
-          puppet_version: ~>5.5
+          ruby_version: 2.7.8
+          puppet_version: 6.29.0
           check: syntax lint metadata_lint check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop
       - rake:
           name: unit-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
