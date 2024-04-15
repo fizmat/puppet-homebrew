@@ -34,4 +34,3 @@ parallel_spec-Ruby 2.5.7-Puppet ~> 6:
     - bundle exec rake parallel_spec
   variables:
     PUPPET_GEM_VERSION: '~> 6'
-
