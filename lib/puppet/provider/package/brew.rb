@@ -181,7 +181,7 @@ Puppet::Type.type(:package).provide(:brew, parent: Puppet::Provider::Package) do
   end
 
   def self.name_version_split(line)
-    if line =~ (%r{^(\S+)\s+(.+)})
+    if line =~ %r{^(\S+)\s+(.+)}
       {
         name:     Regexp.last_match(1),
         ensure:   Regexp.last_match(2),
