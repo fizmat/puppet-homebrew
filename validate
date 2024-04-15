@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 
-eval "$(rbenv init - bash)"
-
-pdk_version='1.7.1'
-ruby_version=${1:-'2.7.8'}
-export PUPPET_GEM_VERSION=${2:-'6.29.0'}
-
-rbenv install --skip-existing "$ruby_version" &&
-rbenv shell "$ruby_version" &&
-gem install "pdk:$pdk_version" --conservative &&
-rm Gemfile.lock || true &&
-bundle install &&
-pdk "_${pdk_version}_" validate --puppet-version="$PUPPET_GEM_VERSION" &&
+pre-commit run --all-files &&
+ruby --version &&
+pdk --version &&
+puppet --version &&
+pdk validate &&
 bundle exec rake syntax lint metadata_lint check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop &&
 bundle exec rake parallel_spec
