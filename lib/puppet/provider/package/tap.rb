@@ -112,7 +112,7 @@ Puppet::Type.type(:package).provide(:tap, parent: Puppet::Provider::Package) do
         line.chomp!
         next if line.empty?
 
-        taps << new({ name: line, ensure: 'present', provider: 'tap' })
+        taps << new(name: line, ensure: 'present', provider: 'tap')
       end
       taps
     rescue Puppet::ExecutionFailure => e
