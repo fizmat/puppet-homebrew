@@ -106,18 +106,25 @@ workflows:
           matrix:
             parameters:
               ruby_version:
-                - '2.2.0'
-                - '2.2.10'
-                - '2.3.0'
+                - '2.6.0'
+                - '2.6.10'
+                - '2.7.0'
+                - '2.7.8'
+              puppet_version:
+                - '~>5.0'
+                - '~>6.0.0'
+                - '~>6.0'
+      - rake:
+          name: unit-ruby<<matrix.ruby_version>>-pup<<matrix.puppet_version>>
+          check: parallel_spec
+          matrix:
+            parameters:
+              ruby_version:
                 - '2.3.8'
                 - '2.4.0'
                 - '2.4.10'
                 - '2.5.0'
                 - '2.5.9'
-                - '2.6.0'
-                - '2.6.10'
-                - '2.7.0'
-                - '2.7.8'
               puppet_version:
                 - '~>4.0.0'
                 - '~>4.0'
@@ -125,3 +132,6 @@ workflows:
                 - '~>5.0'
                 - '~>6.0.0'
                 - '~>6.0'
+            exclude:
+              - ruby_version: '2.4.10'
+                puppet_version: '~>4.0.0'
